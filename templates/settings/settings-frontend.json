@@ -1,0 +1,28 @@
+{
+  "boilerplate": "_",
+  "platform": "javascript",
+  "label": "Aplicação Frontend SPA",
+  "description": "Single Page Application com Vue.js ou React",
+  "references": [
+    { "label": "Vue.js", "url": "https://vuejs.org/" },
+    { "label": "React", "url": "https://react.dev/" },
+    { "label": "Vite", "url": "https://vitejs.dev/" }
+  ],
+  "maintainers": [
+    { "name": "Camilo Carromeu", "email": "camilo.carromeu@embrapa.br", "phone": "+55(67)9-8111-8060" }
+  ],
+  "variables": {
+    "default": [
+      { "name": "ENVIRONMENT", "type": "TEXT", "value": "test" },
+      { "name": "PORT", "type": "PORT" },
+      { "name": "API_URL", "type": "TEXT", "value": "https://api.this-app.com" },
+      { "name": "BASE_URL", "type": "TEXT", "value": "https://this-app.com" }
+    ],
+    "alpha": [],
+    "beta": [],
+    "release": [
+      { "name": "ENVIRONMENT", "type": "TEXT", "value": "production" }
+    ]
+  },
+  "orchestrators": [ "DockerCompose" ]
+}

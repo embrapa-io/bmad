@@ -1,0 +1,27 @@
+{
+  "boilerplate": "_",
+  "platform": "node",
+  "label": "Aplicação Node.js",
+  "description": "Aplicação Node.js com Express e MongoDB",
+  "references": [
+    { "label": "Site oficial do NodeJS", "url": "https://nodejs.dev/" },
+    { "label": "Express Framework", "url": "https://expressjs.com/" }
+  ],
+  "maintainers": [
+    { "name": "Camilo Carromeu", "email": "camilo.carromeu@embrapa.br", "phone": "+55(67)9-8111-8060" }
+  ],
+  "variables": {
+    "default": [
+      { "name": "ENVIRONMENT", "type": "TEXT", "value": "test" },
+      { "name": "PORT", "type": "PORT" },
+      { "name": "BASE_URL", "type": "TEXT", "value": "https://this-app.com/api" },
+      { "name": "SECRET", "type": "SECRET" }
+    ],
+    "alpha": [],
+    "beta": [],
+    "release": [
+      { "name": "ENVIRONMENT", "type": "TEXT", "value": "production" }
+    ]
+  },
+  "orchestrators": [ "DockerCompose" ]
+}

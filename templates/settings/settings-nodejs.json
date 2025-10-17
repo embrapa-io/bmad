@@ -1,0 +1,41 @@
+{
+  "boilerplate": "_",
+  "platform": "node",
+  "label": "API Node.js com autenticação JWT",
+  "description": "Node.js com Express, MongoDB e autenticação JWT",
+  "references": [
+    { "label": "Site oficial do NodeJS", "url": "https://nodejs.dev/" },
+    { "label": "Express Framework", "url": "https://expressjs.com/" },
+    { "label": "JSON Web Tokens", "url": "https://jwt.io/" },
+    { "label": "MongoDB", "url": "https://www.mongodb.com/" }
+  ],
+  "maintainers": [
+    { "name": "Camilo Carromeu", "email": "camilo.carromeu@embrapa.br", "phone": "+55(67)9-8111-8060" }
+  ],
+  "variables": {
+    "default": [
+      { "name": "ENVIRONMENT", "type": "TEXT", "value": "test" },
+      { "name": "PORT", "type": "PORT" },
+      { "name": "BASE_URL", "type": "TEXT", "value": "https://this-app.com/api" },
+      { "name": "FRONTEND_URL", "type": "TEXT", "value": "https://my-pwa.com" },
+      { "name": "SECRET", "type": "SECRET" },
+      { "name": "MAILHOG_PORT", "type": "EMPTY" },
+      { "name": "MONGO_DATA", "type": "VOLUME", "value": "db" },
+      { "name": "MONGO_ROOT_PASSWORD", "type": "PASSWORD" },
+      { "name": "MONGO_NON_ROOT_USERNAME", "type": "TEXT", "value": "user" },
+      { "name": "MONGO_NON_ROOT_PASSWORD", "type": "PASSWORD" },
+      { "name": "EXPRESS_PORT", "type": "PORT" },
+      { "name": "EXPRESS_USERNAME", "type": "TEXT", "value": "express" },
+      { "name": "EXPRESS_PASSWORD", "type": "PASSWORD" },
+      { "name": "SMTP_HOST", "type": "TEXT", "value": "smtp-relay.gmail.com" },
+      { "name": "SMTP_PORT", "type": "TEXT", "value": "587" },
+      { "name": "SMTP_SECURE", "type": "TEXT", "value": "yes" }
+    ],
+    "alpha": [],
+    "beta": [],
+    "release": [
+      { "name": "ENVIRONMENT", "type": "TEXT", "value": "production" }
+    ]
+  },
+  "orchestrators": [ "DockerCompose" ]
+}

@@ -1,0 +1,89 @@
+# Template Base docker-compose.yaml - Embrapa I/O
+# Este é um template base que deve ser adaptado para cada stack
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT}:8080"
+    environment:
+      # Adicionar variáveis de ambiente específicas da aplicação
+      APP_ENV: ${IO_STAGE}
+    networks:
+      - stack
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Serviço CLI: Backup
+  backup:
+    image: alpine:latest
+    restart: "no"
+    profiles:
+      - cli
+    volumes:
+      - backup_data:/backup
+      # Adicionar volumes de dados a serem backup
+    networks:
+      - stack
+    command: >
+      sh -c "
+        set -ex &&
+        BACKUP_DIR=${IO_PROJECT}_${IO_APP}_${IO_STAGE}_${IO_VERSION}_$$(date +'%Y-%m-%d_%H-%M-%S') &&
+        mkdir -p /backup/$$BACKUP_DIR &&
+        echo 'Implementar lógica de backup aqui' &&
+        tar -czf /backup/$$BACKUP_DIR.tar.gz -C /backup $$BACKUP_DIR &&
+        rm -rf /backup/$$BACKUP_DIR
+      "
+
+  # Serviço CLI: Restore
+  restore:
+    image: alpine:latest
+    restart: "no"
+    profiles:
+      - cli
+    volumes:
+      - backup_data:/backup
+      # Adicionar volumes de dados a serem restaurados
+    networks:
+      - stack
+    command: >
+      sh -c "
+        set -ex &&
+        FILE_TO_RESTORE=${BACKUP_FILE_TO_RESTORE:-no_file_to_restore} &&
+        test -f /backup/$$FILE_TO_RESTORE &&
+        RESTORE_DIR=$$(mktemp -d) &&
+        tar -xf /backup/$$FILE_TO_RESTORE -C $$RESTORE_DIR --strip-components=1 &&
+        echo 'Implementar lógica de restore aqui' &&
+        rm -rf $$RESTORE_DIR
+      "
+
+  # Serviço CLI: Sanitize
+  sanitize:
+    image: alpine:latest
+    restart: "no"
+    profiles:
+      - cli
+    volumes:
+      # Adicionar volumes de dados a serem otimizados
+    networks:
+      - stack
+    command: >
+      sh -c '
+        set -ex &&
+        echo "Implementar lógica de sanitize/otimização aqui"
+      '
+
+networks:
+  stack:
+    name: ${IO_PROJECT}_${IO_APP}_${IO_STAGE}
+    external: true
+
+volumes:
+  backup_data:
+    name: ${IO_PROJECT}_${IO_APP}_${IO_STAGE}_backup
+    external: true

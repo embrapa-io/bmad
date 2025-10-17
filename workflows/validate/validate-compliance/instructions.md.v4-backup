@@ -1,0 +1,436 @@
+# Instruções: Validar Conformidade Embrapa I/O
+
+## Objetivo
+
+Executar validação completa de conformidade de um projeto com a plataforma Embrapa I/O, gerando relatório detalhado com score e sugestões de correção.
+
+## Conhecimento Necessário
+
+Antes de iniciar, você deve ter lido e compreendido:
+- `knowledge/embrapa-io-fundamentals.md` - As 4 verdades fundamentais
+- `knowledge/embrapa-io-validation.md` - Todas as 38 regras de validação
+- `knowledge/embrapa-io-workflows.md` - Adaptação por tipo de projeto
+
+## Entrada
+
+### Parâmetros Obrigatórios
+- `project_path`: Caminho absoluto do projeto a ser validado
+
+### Parâmetros Opcionais
+- `severity_levels`: Array de severidades a validar (padrão: todas)
+- `auto_fix`: Boolean para aplicar correções automáticas (padrão: false)
+
+## Processo de Validação
+
+### Passo 1: Detectar Tipo de Projeto
+
+Analise o projeto e determine seu tipo:
+
+```javascript
+function detectProjectType(projectPath) {
+  const hasDockerCompose = fs.existsSync(`${projectPath}/docker-compose.yaml`);
+  const hasSettings = fs.existsSync(`${projectPath}/.embrapa/settings.json`);
+  const hasEnvIo = fs.existsSync(`${projectPath}/.env.io.example`);
+
+  if (hasSettings && hasEnvIo) {
+    return 'ALREADY_COMPLIANT';
+  } else if (hasDockerCompose) {
+    return 'EXISTING';
+  } else {
+    return 'NEW';
+  }
+}
+```
+
+**Se tipo = 'NEW'**: Interromper validação e sugerir workflow `create-*`
+
+**Saída do Passo 1**:
+```json
+{
+  "project_type": "EXISTING|ALREADY_COMPLIANT",
+  "detected_files": {
+    "docker_compose": true|false,
+    "env_io_example": true|false,
+    "env_example": true|false,
+    "settings_json": true|false
+  }
+}
+```
+
+---
+
+### Passo 2: Validar docker-compose.yaml
+
+Executar **14 validações** conforme `embrapa-io-validation.md` seção "Validação 1":
+
+#### CRITICAL (ID 1.1 - 1.5)
+- [ ] 1.1 Arquivo existe
+- [ ] 1.2 Campo 'version' ausente
+- [ ] 1.3 Network 'stack' existe
+- [ ] 1.4 Network 'stack' é externa
+- [ ] 1.5 Nome da network correto
+
+#### HIGH (ID 1.6 - 1.10)
+- [ ] 1.6 Todos os serviços conectados à 'stack'
+- [ ] 1.7 Nenhum 'container_name'
+- [ ] 1.8 Volumes externos
+- [ ] 1.9 Serviços com 'restart: unless-stopped'
+- [ ] 1.10 Serviços com 'healthcheck'
+
+#### MEDIUM (ID 1.11 - 1.13)
+- [ ] 1.11 Portas via variáveis
+- [ ] 1.12 CLI com profiles
+- [ ] 1.13 Volume backup existe
+
+#### LOW (ID 1.14)
+- [ ] 1.14 Serviços CLI (backup, restore, sanitize)
+
+**Saída do Passo 2**:
+```json
+{
+  "category": "docker-compose",
+  "status": "compliant|partial|non-compliant",
+  "errors": [
+    {
+      "id": "1.6",
+      "severity": "HIGH",
+      "message": "Serviço 'api' não está conectado à network 'stack'",
+      "location": "docker-compose.yaml:15",
+      "solution": "Adicionar 'stack' em 'networks:' do serviço",
+      "auto_fixable": true
+    }
+  ]
+}
+```
+
+---
+
+### Passo 3: Validar Arquivos .env
+
+Executar **8 validações** conforme `embrapa-io-validation.md` seção "Validação 2":
+
+#### CRITICAL (ID 2.1 - 2.3)
+- [ ] 2.1 .env.io.example existe
+- [ ] 2.2 .env.example existe
+- [ ] 2.3 Sem duplicação de variáveis
+
+#### HIGH (ID 2.4 - 2.6)
+- [ ] 2.4 Variáveis obrigatórias em .env.io
+- [ ] 2.5 Valores sem espaços/aspas
+- [ ] 2.6 Convenção de nomenclatura
+
+#### MEDIUM (ID 2.7 - 2.8)
+- [ ] 2.7 .gitignore ignora .env
+- [ ] 2.8 Variáveis sensíveis com comentário
+
+**Saída do Passo 3**:
+```json
+{
+  "category": "env-files",
+  "status": "compliant|partial|non-compliant",
+  "errors": [...],
+  "required_vars_found": {
+    "IO_PROJECT": true,
+    "IO_APP": true,
+    "IO_STAGE": true,
+    "IO_VERSION": true
+  }
+}
+```
+
+---
+
+### Passo 4: Validar .embrapa/settings.json
+
+Executar **8 validações** conforme `embrapa-io-validation.md` seção "Validação 3":
+
+#### CRITICAL (ID 3.1 - 3.3)
+- [ ] 3.1 Arquivo existe
+- [ ] 3.2 JSON válido
+- [ ] 3.3 Campos obrigatórios presentes (boilerplate, platform, label, description, references, maintainers, variables, orchestrators)
+
+#### HIGH (ID 3.4 - 3.6)
+- [ ] 3.4 platform válida
+- [ ] 3.5 variables.default presente e não-vazio
+- [ ] 3.6 Tipos de variáveis válidos (TEXT, PASSWORD, SECRET, PORT, VOLUME, EMPTY)
+
+#### MEDIUM (ID 3.7 - 3.8)
+- [ ] 3.7 Variáveis sem espaços ou aspas nos valores
+- [ ] 3.8 references não-vazio
+
+**Saída do Passo 4**:
+```json
+{
+  "category": "settings-json",
+  "status": "compliant|partial|non-compliant",
+  "errors": [...],
+  "metadata": {
+    "project_type": "backend",
+    "stack": "nodejs",
+    "compliance_version": "1.0"
+  }
+}
+```
+
+---
+
+### Passo 5: Validar Integrações
+
+Executar **5 validações** conforme `embrapa-io-validation.md` seção "Validação 4":
+
+#### HIGH (ID 4.1 - 4.2)
+- [ ] 4.1 Sentry configurado corretamente
+- [ ] 4.2 Matomo tracking implementado
+
+#### MEDIUM (ID 4.3 - 4.4)
+- [ ] 4.3 Logo Embrapa presente
+- [ ] 4.4 SonarQube configurado (se recomendado)
+
+#### LOW (ID 4.5)
+- [ ] 4.5 Grafana Loki configurado
+
+**Saída do Passo 5**:
+```json
+{
+  "category": "integrations",
+  "status": "compliant|partial|non-compliant",
+  "errors": [...],
+  "integrations_status": {
+    "sentry": "configured|missing",
+    "matomo": "configured|missing",
+    "sonarqube": "configured|missing|not-recommended",
+    "loki": "configured|missing"
+  }
+}
+```
+
+---
+
+### Passo 6: Calcular Compliance Score
+
+Aplicar algoritmo:
+
+```javascript
+function calculateComplianceScore(allErrors) {
+  const critical = allErrors.filter(e => e.severity === 'CRITICAL').length;
+  const high = allErrors.filter(e => e.severity === 'HIGH').length;
+
+  if (critical > 0 || high > 3) {
+    return 'LOW';
+  } else if (high > 0) {
+    return 'MEDIUM';
+  } else {
+    return 'HIGH';
+  }
+}
+```
+
+**Saída do Passo 6**:
+```json
+{
+  "compliance_score": "HIGH|MEDIUM|LOW",
+  "summary": {
+    "critical": 0,
+    "high": 2,
+    "medium": 5,
+    "low": 3,
+    "total": 10
+  }
+}
+```
+
+---
+
+### Passo 7: Gerar Relatório
+
+Criar dois formatos:
+
+#### 7.1 Relatório JSON (validation-report-TIMESTAMP.json)
+
+```json
+{
+  "project": {
+    "name": "Nome do Projeto",
+    "path": "/caminho/para/projeto",
+    "type": "EXISTING"
+  },
+  "validation": {
+    "timestamp": "2025-10-06T14:30:00Z",
+    "score": "MEDIUM",
+    "summary": {
+      "critical": 0,
+      "high": 2,
+      "medium": 5,
+      "low": 3,
+      "total": 10
+    }
+  },
+  "results": {
+    "docker_compose": {...},
+    "env_files": {...},
+    "settings_json": {...},
+    "integrations": {...}
+  },
+  "all_errors": [...]
+}
+```
+
+#### 7.2 Relatório Markdown (compliance-summary-TIMESTAMP.md)
+
+```markdown
+# Relatório de Conformidade Embrapa I/O
+
+**Projeto**: Nome do Projeto
+**Data**: 2025-10-06 14:30:00
+**Score**: 🟡 MEDIUM
+
+## Resumo Executivo
+
+- ✅ 28 validações passaram
+- ⚠️ 2 erros HIGH encontrados
+- ℹ️ 5 erros MEDIUM
+- 💡 3 sugestões LOW
+
+## Detalhamento por Categoria
+
+### 1. docker-compose.yaml: 🟢 Compliant
+Todas as validações passaram.
+
+### 2. Arquivos .env: 🟡 Parcial
+⚠️ **HIGH**: Variável 'DB_PASSWORD' contém espaços (ID 2.5)
+ℹ️ **MEDIUM**: .gitignore não ignora .env (ID 2.7)
+
+### 3. .embrapa/settings.json: 🟢 Compliant
+Todas as validações passaram.
+
+### 4. Integrações: 🔴 Não Conforme
+⚠️ **HIGH**: Sentry habilitado mas código não encontrado (ID 4.1)
+⚠️ **HIGH**: Matomo tracking não implementado (ID 4.2)
+
+## Próximos Passos
+
+1. **ALTA PRIORIDADE** - Corrigir erros HIGH:
+   - Remover espaços da variável DB_PASSWORD em .env.example
+   - Implementar integração Sentry conforme knowledge/embrapa-io-integrations.md
+   - Adicionar tracking Matomo no frontend
+
+2. **MÉDIA PRIORIDADE** - Corrigir erros MEDIUM:
+   - Adicionar .env ao .gitignore
+   - ...
+
+3. **BAIXA PRIORIDADE** - Melhorias sugeridas:
+   - Considerar configurar Grafana Loki
+   - ...
+```
+
+---
+
+### Passo 8: Sugerir Correções
+
+Para cada erro encontrado, sugerir:
+
+1. **Descrição clara** do problema
+2. **Solução específica** com exemplo de código
+3. **Indicação de auto-fixable** (sim/não)
+4. **Workflow relacionado** (se aplicável)
+
+**Exemplo de sugestão**:
+```json
+{
+  "error_id": "1.6",
+  "suggestion": {
+    "problem": "Serviço 'api' não está conectado à network 'stack'",
+    "solution": "Adicione a seguinte configuração ao serviço 'api' no docker-compose.yaml:\n\nnetworks:\n  - stack",
+    "auto_fixable": true,
+    "related_workflow": null
+  }
+}
+```
+
+---
+
+### Passo 9: Aplicar Auto-Fixes (Opcional)
+
+**Condição**: `auto_fix == true` E erro marcado como `auto_fixable == true`
+
+Correções automáticas possíveis:
+- Remover campo 'version' do docker-compose.yaml
+- Adicionar network 'stack' externa
+- Adicionar 'external: true' a volumes
+- Criar arquivos .env.example ausentes
+- Adicionar .env ao .gitignore
+- Criar .embrapa/settings.json com estrutura base
+
+**Para cada auto-fix aplicado**:
+1. Criar backup do arquivo original
+2. Aplicar modificação
+3. Validar syntax do arquivo modificado
+4. Adicionar ao log de mudanças
+
+**Saída do Passo 9**:
+```json
+{
+  "auto_fixes_applied": [
+    {
+      "error_id": "1.2",
+      "file": "docker-compose.yaml",
+      "action": "Removed 'version' field",
+      "backup": "/tmp/backup/docker-compose.yaml.bak",
+      "success": true
+    }
+  ]
+}
+```
+
+---
+
+## Saída Final
+
+### validation-report-TIMESTAMP.json
+Relatório JSON completo com todos os dados estruturados
+
+### compliance-summary-TIMESTAMP.md
+Relatório Markdown humanizado para leitura
+
+### Console Output
+```
+🎯 Validação de Conformidade Embrapa I/O
+
+📂 Projeto: Nome do Projeto
+📍 Caminho: /caminho/para/projeto
+🏷️  Tipo: EXISTING
+
+🔍 Executando validações...
+✅ docker-compose.yaml (14 regras)
+⚠️  Arquivos .env (8 regras) - 2 erros
+✅ .embrapa/settings.json (8 regras)
+❌ Integrações (5 regras) - 2 erros
+
+📊 Compliance Score: 🟡 MEDIUM
+
+📝 Relatórios gerados:
+- /caminho/validation-report-2025-10-06-143000.json
+- /caminho/compliance-summary-2025-10-06-143000.md
+
+💡 Próximos passos:
+1. Corrigir 2 erros HIGH
+2. Considerar corrigir 5 erros MEDIUM
+3. Opcionalmente implementar 3 sugestões LOW
+```
+
+---
+
+## Notas Importantes
+
+- **SEMPRE** ler o arquivo completo antes de validar
+- **SEMPRE** seguir as 38 regras de validação exatamente como documentadas
+- **SEMPRE** gerar relatórios nos dois formatos (JSON + Markdown)
+- **SEMPRE** indicar próximos passos claros e priorizados
+- **NUNCA** inventar regras de validação não documentadas
+- **NUNCA** aplicar auto-fix sem criar backup
+
+---
+
+**Versão**: 1.0
+**Última atualização**: 2025-10-06
+**Autor**: Módulo Embrapa I/O BMAD
