@@ -1,0 +1,6 @@
+# docker-compose.yaml - {{project_name}}
+# Gerado automaticamente pelo módulo Embrapa I/O
+# Stack: {{selected_stack}}
+# Data: {{date}}
+
+{{docker_compose_content}}

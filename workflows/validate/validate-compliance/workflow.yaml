@@ -36,3 +36,6 @@ web_bundle:
     - "bmad/embrapa-io/knowledge/embrapa-io-fundamentals.md"
     - "bmad/embrapa-io/knowledge/embrapa-io-validation.md"
     - "bmad/embrapa-io/knowledge/embrapa-io-workflows.md"
+    - "bmad/embrapa-io/knowledge/embrapa-io-deployment.md"
+    - "bmad/embrapa-io/knowledge/embrapa-io-stacks.md"
+    - "bmad/embrapa-io/knowledge/embrapa-io-integrations.md"
