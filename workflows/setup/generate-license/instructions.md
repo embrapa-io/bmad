@@ -1,61 +1,96 @@
-# Generate LICENSE Instructions
+# Generate LICENSE - Instruções de Geração Automática
 
-<critical>Este é um workflow autônomo - execução silenciosa sem interação com usuário</critical>
+<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already loaded and processed: {project-root}/bmad/embrapa-io/workflows/setup/generate-license/workflow.yaml</critical>
+<critical>This is an AUTONOMOUS workflow - executes silently without user interaction</critical>
+<critical>Communicate in {communication_language} for final confirmation only</critical>
 
-## Objetivo
-Gerar automaticamente o arquivo `LICENSE` na raiz do projeto com o copyright padrão da Embrapa.
+<workflow>
 
-## Características
-- **Execução silenciosa**: Não solicita confirmação do usuário
-- **Ano automático**: Calcula o ano atual (YYYY) automaticamente
-- **Conteúdo fixo**: Copyright padrão da Embrapa
+<step n="1" goal="Calcular ano atual automaticamente">
+<action>Obter data atual do sistema</action>
+<action>Extrair ano no formato YYYY (4 dígitos)</action>
+<action>Armazenar em variável {{current_year}}</action>
 
-## Steps
+**Exemplo**: Se data atual é 2025-10-21, então {{current_year}} = 2025
 
-<step n="1" goal="Calcular ano atual">
-  <action>Obter ano atual no formato YYYY (4 dígitos)</action>
-  <action>Armazenar em variável current_year</action>
-  <example>Se hoje é 2025-10-10, então current_year = 2025</example>
-  <template-output>current_year</template-output>
+**Importante**: NÃO usar ano fixo - deve ser calculado dinamicamente a cada execução
 </step>
 
-<step n="2" goal="Gerar arquivo LICENSE">
-  <action>Substituir {{current_year}} no template</action>
-  <action>Salvar arquivo completo em {default_output_file}</action>
-  <critical>NÃO solicitar confirmação - criar automaticamente (workflow autônomo)</critical>
+<step n="2" goal="Gerar conteúdo do arquivo LICENSE">
+<action>Carregar template de: {installed_path}/template.LICENSE</action>
+<action>Substituir variável {{current_year}} pelo ano calculado no Step 1</action>
+
+**Conteúdo esperado**:
+```
+Copyright ⓒ 2025 Brazilian Agricultural Research Corporation (Embrapa). All rights reserved.
+```
+
+(onde 2025 é substituído pelo ano atual)
+
+<action>Armazenar conteúdo completo pronto para salvar</action>
+
+<template-output>license_content</template-output>
 </step>
 
-## Conteúdo do Arquivo
+<step n="3" goal="Salvar arquivo LICENSE">
+<action>Criar arquivo em {default_output_file} (que resolve para {project-root}/LICENSE)</action>
+<action>Escrever conteúdo gerado no Step 2</action>
+<action>Garantir encoding UTF-8 para preservar símbolo ⓒ</action>
 
+**Importante**:
+- Este workflow é AUTÔNOMO - NÃO solicitar confirmação do usuário
+- Se arquivo LICENSE já existir, sobrescrever silenciosamente
+- Garantir quebra de linha final
+
+<check if="arquivo salvo com sucesso">
+<action>Confirmar criação para {user_name} em {communication_language}:</action>
+
+**Mensagem de confirmação**:
 ```
-Copyright ⓒ YYYY Brazilian Agricultural Research Corporation (Embrapa). All rights reserved.
+✅ Arquivo LICENSE criado com sucesso!
+
+Localização: {project-root}/LICENSE
+Ano do copyright: {{current_year}}
+Conteúdo: Copyright ⓒ {{current_year}} Brazilian Agricultural Research Corporation (Embrapa). All rights reserved.
 ```
+</check>
 
-Onde `YYYY` é substituído pelo ano atual.
+<check if="erro ao salvar">
+<action>Reportar erro em {communication_language}</action>
+<action>Informar caminho tentado e motivo da falha</action>
+</check>
+</step>
 
-## Regras Importantes
+</workflow>
 
-1. **Execução silenciosa**: Este workflow NÃO interage com o usuário
-2. **Ano automático**: Sempre usa o ano atual da execução
-3. **Sem confirmação**: Cria o arquivo diretamente
-4. **Sobrescreve**: Se LICENSE já existir, sobrescreve com o template padrão
+## 📋 Validação Pós-Geração
 
-## Uso por Agentes
+Este workflow deve resultar em:
 
-Este workflow deve ser invocado automaticamente durante a estruturação inicial do projeto:
+- ✅ Arquivo `LICENSE` na raiz do projeto
+- ✅ Conteúdo: `Copyright ⓒ YYYY Brazilian Agricultural Research Corporation (Embrapa). All rights reserved.`
+- ✅ Ano (YYYY) corresponde ao ano atual de execução
+- ✅ Símbolo ⓒ (U+24D2) renderizado corretamente
+- ✅ Encoding UTF-8
+- ✅ Arquivo com quebra de linha final
+- ✅ Execução silenciosa (sem prompts ao usuário)
+
+## 🔧 Uso por Agentes
+
+Este workflow deve ser invocado automaticamente durante setup inicial do projeto:
 
 ```xml
 <step n="X" goal="Gerar arquivo LICENSE da Embrapa">
   <invoke-workflow>
     <path>{project-root}/bmad/embrapa-io/workflows/setup/generate-license/workflow.yaml</path>
-    <description>Cria LICENSE com copyright da Embrapa</description>
+    <description>Cria LICENSE com copyright da Embrapa (execução silenciosa)</description>
   </invoke-workflow>
 </step>
 ```
 
-## Validação
-
-- [ ] Arquivo LICENSE criado na raiz do projeto
-- [ ] Conteúdo contém "Copyright ⓒ YYYY Brazilian Agricultural Research Corporation (Embrapa). All rights reserved."
-- [ ] Ano (YYYY) corresponde ao ano atual
-- [ ] Nenhuma interação com usuário ocorreu
+**Características**:
+- Workflow autônomo (sem interação)
+- Ano calculado dinamicamente
+- Sobrescreve LICENSE existente
+- Confirmação final apenas
