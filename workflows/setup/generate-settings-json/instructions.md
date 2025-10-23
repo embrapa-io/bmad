@@ -41,7 +41,12 @@
 </step>
 
 <step n="3" goal="Definir variáveis de ambiente">
-<action>Carregar template base conforme stack detectada</action>
+<action>Carregar template base conforme stack detectada:</action>
+- Se Node.js backend: Ler {project-root}/bmad/embrapa-io/templates/settings/settings-nodejs.json
+- Se Frontend (React/Vue): Ler {project-root}/bmad/embrapa-io/templates/settings/settings-frontend.json
+- Outro: Ler {project-root}/bmad/embrapa-io/templates/settings/settings-base.json
+
+<action>Extrair variáveis padrão do template carregado</action>
 
 <action>Apresentar variáveis padrão da stack:</action>
 - ENVIRONMENT (default: test, release: production)

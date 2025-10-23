@@ -17,6 +17,9 @@ template: "{installed_path}/template.docker-compose.yaml"
 instructions: "{installed_path}/instructions.md"
 validation: "{installed_path}/checklist.md"
 
+# Project configuration
+project_name: ""
+
 # Output configuration
 default_output_file: "{project-root}/docker-compose.yaml"
 
@@ -32,5 +35,6 @@ web_bundle:
     - "bmad/embrapa-io/workflows/setup/generate-docker-compose/instructions.md"
     - "bmad/embrapa-io/workflows/setup/generate-docker-compose/template.docker-compose.yaml"
     - "bmad/embrapa-io/workflows/setup/generate-docker-compose/checklist.md"
+    - "bmad/embrapa-io/templates/docker-compose/base.yaml"
     - "bmad/embrapa-io/knowledge/embrapa-io-fundamentals.md"
     - "bmad/embrapa-io/knowledge/embrapa-io-validation.md"

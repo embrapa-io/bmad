@@ -19,6 +19,7 @@
 - IO_VERSION
 
 <action>Armazenar variáveis para uso no template</action>
+<action>Gerar project_name combinando: {{IO_PROJECT}}_{{IO_APP}}</action>
 </check>
 </step>
 
