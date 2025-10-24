@@ -2,7 +2,6 @@
 name: generate-docker-compose
 description: "Gera arquivo docker-compose.yaml conforme com a plataforma Embrapa I/O baseado em template adaptável"
 author: "BMad Embrapa I/O Module"
-version: "1.0.0"
 
 # Critical variables from config_source
 config_source: "{project-root}/bmad/embrapa-io/config.yaml"

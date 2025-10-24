@@ -2,7 +2,6 @@
 name: generate-license
 description: "Gera arquivo LICENSE com copyright da Embrapa automaticamente"
 author: "BMad Embrapa I/O Module"
-version: "1.0.0"
 
 # Critical variables from config_source
 config_source: "{project-root}/bmad/embrapa-io/config.yaml"

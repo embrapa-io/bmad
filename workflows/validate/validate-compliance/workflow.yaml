@@ -2,7 +2,6 @@
 name: "validate-compliance"
 description: "Validação completa de conformidade com a plataforma Embrapa I/O - analisa docker-compose, arquivos .env, settings.json e integrações"
 author: "BMad Embrapa I/O Module"
-version: "2.0.0"
 category: "validate"
 
 # Critical variables from config_source

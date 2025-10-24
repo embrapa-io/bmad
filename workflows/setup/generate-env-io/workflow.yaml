@@ -2,7 +2,6 @@
 name: generate-env-io
 description: "Gera arquivos .env.io e .env.io.example com variáveis da plataforma Embrapa I/O"
 author: "BMad Embrapa I/O Module"
-version: "1.0.0"
 
 # Critical variables from config_source
 config_source: "{project-root}/bmad/embrapa-io/config.yaml"

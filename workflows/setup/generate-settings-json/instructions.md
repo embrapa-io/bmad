@@ -23,20 +23,20 @@
 </step>
 
 <step n="2" goal="Coletar informações do projeto">
-<ask>Qual o nome/label da aplicação? (ex: "API de Catálogo de Produtos")</ask>
+<ask>{user_name}, qual o nome/label da aplicação? (ex: "API de Catálogo de Produtos")</ask>
 <action>Armazenar como {{app_label}}</action>
 
-<ask>Breve descrição da aplicação (1 linha):</ask>
+<ask>{user_name}, forneça uma breve descrição da aplicação (1 linha):</ask>
 <action>Armazenar como {{app_description}}</action>
 
-<ask>Nome do mantenedor principal:</ask>
+<ask>{user_name}, qual o nome do mantenedor principal?</ask>
 <action>Armazenar como {{maintainer_name}}</action>
 
-<ask>Email do mantenedor:</ask>
+<ask>{user_name}, qual o email do mantenedor?</ask>
 <action>Validar formato de email</action>
 <action>Armazenar como {{maintainer_email}}</action>
 
-<ask optional="true">Telefone do mantenedor (opcional):</ask>
+<ask optional="true">{user_name}, qual o telefone do mantenedor (opcional)?</ask>
 <action>Armazenar como {{maintainer_phone}}</action>
 </step>
 
@@ -55,7 +55,7 @@
 - SECRET
 - Outras específicas da stack
 
-<ask>Deseja adicionar variáveis personalizadas além das padrão? (s/n)</ask>
+<ask>{user_name}, deseja adicionar variáveis personalizadas além das padrão? (s/n)</ask>
 
 <check if="resposta == 's'">
 <action>Coletar variáveis adicionais:</action>
