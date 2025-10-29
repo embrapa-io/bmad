@@ -100,7 +100,7 @@ Os serviços CLI são executados manualmente com perfis do Docker Compose e são
 </step>
 
 <step n="4" goal="Gerar docker-compose.yaml baseado no template">
-<action>Carregar template base de: {project-root}/bmad/embrapa-io/templates/docker-compose/base.yaml</action>
+<action>Carregar template base de: {base_template_path}</action>
 
 <action>Adaptar template conforme a stack selecionada:</action>
 

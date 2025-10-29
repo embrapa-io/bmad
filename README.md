@@ -1,5 +1,5 @@
 ---
-last-redoc-date: 2025-10-22
+last-redoc-date: 2025-10-28
 ---
 
 # Módulo Embrapa I/O
@@ -120,3 +120,11 @@ bmad/embrapa-io/
     ├── setup/                # 4 workflows de configuração
     └── validate/             # 1 workflow de validação
 ```
+
+## Compliance & Quality
+
+**BMAD v6 Compliance**: 100% (auditado em 2025-10-28)
+- Zero issues críticas
+- Zero issues importantes
+- Zero bloat
+- Todas as 5 workflows em conformidade perfeita

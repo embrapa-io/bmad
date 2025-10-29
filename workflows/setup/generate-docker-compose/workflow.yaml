@@ -16,6 +16,9 @@ template: "{installed_path}/template.docker-compose.yaml"
 instructions: "{installed_path}/instructions.md"
 validation: "{installed_path}/checklist.md"
 
+# Template configuration
+base_template_path: "{project-root}/bmad/embrapa-io/templates/docker-compose/base.yaml"
+
 # Project configuration
 project_name: ""
 

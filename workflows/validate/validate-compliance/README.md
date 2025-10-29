@@ -1,5 +1,5 @@
 ---
-last-redoc-date: 2025-10-22
+last-redoc-date: 2025-10-28
 ---
 
 # Validate Compliance Workflow
@@ -8,7 +8,7 @@ Workflow interativo de validação completa que verifica conformidade de projeto
 
 Este é o workflow mais abrangente do módulo, carregando seis arquivos de conhecimento antes de iniciar validações: `embrapa-io-fundamentals.md` (4 Verdades Fundamentais), `embrapa-io-validation.md` (38 regras organizadas), `embrapa-io-workflows.md`, `embrapa-io-deployment.md`, `embrapa-io-stacks.md`, e `embrapa-io-integrations.md`. Executa validações sistemáticas em `docker-compose.yaml` (14 regras), arquivos `.env.io` e `.env.io.example` (10 regras), `.embrapa/settings.json` (8 regras), e integrações de serviços (6 regras).
 
-O diferencial está na capacidade de filtrar validações por nível de severidade (CRITICAL, HIGH, MEDIUM, LOW ou ALL), detecção automática de tipo de projeto (NEW, EXISTING, ALREADY_COMPLIANT), e opção de aplicar correções automáticas quando possível. Para projetos novos sem Docker Compose, o workflow encerra com sugestões de workflows `create-*` apropriados. Gera dois relatórios: JSON estruturado para processamento programático e Markdown formatado para leitura humana, ambos com timestamp e nome do projeto.
+O diferencial está na capacidade de filtrar validações por nível de severidade (CRITICAL, HIGH, MEDIUM, LOW ou ALL), detecção automática de tipo de projeto (NEW, EXISTING, ALREADY_COMPLIANT), e opção de aplicar correções automáticas quando possível. Para projetos novos sem Docker Compose, o workflow encerra com sugestões de workflows `generate-*` apropriados. Gera dois relatórios: JSON estruturado para processamento programático e Markdown formatado para leitura humana, ambos com timestamp e nome do projeto.
 
 Categoriza problemas por severidade, fornece recomendações corretivas específicas, e pode reexecutar validações após correções para verificar melhorias. Suporta análise de múltiplos arquivos simultaneamente, mantendo contexto entre validações relacionadas.
 
@@ -20,6 +20,8 @@ Categoriza problemas por severidade, fornece recomendações corretivas específ
   <description>Validação completa de conformidade Embrapa I/O</description>
 </invoke-workflow>
 ```
+
+Este é um workflow **INTERATIVO** com opções de configuração.
 
 ## Inputs
 
@@ -38,3 +40,24 @@ Categoriza problemas por severidade, fornece recomendações corretivas específ
   - Contadores de problemas por severidade
   - Recomendações corretivas priorizadas
 - **Knowledge Loaded**: 6 arquivos de conhecimento da plataforma
+
+## Validation Categories
+
+### Docker Compose (14 regras)
+Valida conformidade com as 4 Verdades Fundamentais e melhores práticas Docker.
+
+### Environment Files (10 regras)
+Verifica estrutura e valores de `.env.io` e `.env.io.example`.
+
+### Settings JSON (8 regras)
+Valida estrutura e completude de `.embrapa/settings.json`.
+
+### Service Integrations (6 regras)
+Verifica configurações de Sentry, Matomo e outros serviços.
+
+## Severity Levels
+
+- **CRITICAL**: Bloqueadores que impedem deploy
+- **HIGH**: Problemas sérios que afetam funcionalidade
+- **MEDIUM**: Melhorias importantes recomendadas
+- **LOW**: Otimizações e boas práticas

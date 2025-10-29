@@ -1,5 +1,5 @@
 ---
-last-redoc-date: 2025-10-22
+last-redoc-date: 2025-10-28
 ---
 
 # Generate Settings JSON Workflow
@@ -21,6 +21,8 @@ Após coletar informações do mantenedor e identificar a stack, o workflow ofer
 </invoke-workflow>
 ```
 
+Este é um workflow **INTERATIVO** que requer input do usuário.
+
 ## Inputs
 
 - **Stack Detection**: Automática (Node.js, Frontend, PHP, .NET, outros)
@@ -41,3 +43,12 @@ Após coletar informações do mantenedor e identificar a stack, o workflow ofer
   - `variables`: Organizadas por ambiente (default, alpha, beta, release)
   - `orchestrators`: `["DockerCompose"]`
 - **Templates**: Carrega variáveis padrão de `settings-nodejs.json`, `settings-frontend.json`, ou `settings-base.json`
+
+## Variable Types Supported
+
+- **TEXT**: Valores texto simples
+- **PORT**: Números de porta (validados)
+- **SECRET**: Valores sensíveis (mascarados em logs)
+- **PASSWORD**: Senhas (mascaradas em logs)
+- **VOLUME**: Paths de volumes Docker
+- **EMPTY**: Placeholder vazio para preenchimento futuro

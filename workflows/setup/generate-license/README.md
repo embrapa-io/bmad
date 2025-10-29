@@ -1,5 +1,5 @@
 ---
-last-redoc-date: 2025-10-22
+last-redoc-date: 2025-10-28
 ---
 
 # Generate LICENSE Workflow
@@ -18,6 +18,8 @@ Se o arquivo LICENSE já existir, será sobrescrito silenciosamente - comportame
   <description>Gera LICENSE da Embrapa (execução silenciosa)</description>
 </invoke-workflow>
 ```
+
+Este é um workflow **AUTÔNOMO** - não requer interação do usuário.
 
 ## Inputs
 
