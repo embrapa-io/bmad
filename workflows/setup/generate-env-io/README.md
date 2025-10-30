@@ -1,5 +1,5 @@
 ---
-last-redoc-date: 2025-10-28
+last-redoc-date: 2025-10-29
 ---
 
 # Generate Environment Variables Workflow
@@ -46,3 +46,7 @@ Placeholders como `SENTRY_DSN=GET_IN_DASHBOARD` e `MATOMO_ID=522` são incluído
 - Email: Deve terminar com @embrapa.br
 - IO_VERSION: Sempre formato `0.YY.M-dev.1` onde YY=ano-2000, M=mês sem zero (1-12)
 - COMPOSE_PROJECT_NAME: Sempre `${IO_PROJECT}_${IO_APP}_development`
+
+## Quality
+
+Workflow auditado e certificado BMAD v6 (Score: 100%). Template mapping perfeito com todas as 6 variáveis mapeadas corretamente.

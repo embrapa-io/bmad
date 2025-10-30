@@ -21,6 +21,8 @@
 <action>Armazenar variáveis para uso no template</action>
 <action>Gerar project_name combinando: {{IO_PROJECT}}_{{IO_APP}}</action>
 </check>
+
+<template-output>project_name</template-output>
 </step>
 
 <step n="2" goal="Identificar tipo de aplicação e stack">
@@ -60,6 +62,8 @@ Opções:
 </ask>
 
 <action>Armazenar stack selecionada como {{selected_stack}}</action>
+
+<template-output>selected_stack</template-output>
 </step>
 
 <step n="3" goal="Coletar informações específicas da aplicação">

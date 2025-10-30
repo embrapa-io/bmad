@@ -1,11 +1,8 @@
 # Generate .env.io Workflow Configuration
-name: generate-env-io
-description: "Gera arquivos .env.io e .env.io.example com variáveis da plataforma Embrapa I/O"
-author: "BMad Embrapa I/O Module"
 
 # Critical variables from config_source
 config_source: "{project-root}/bmad/embrapa-io/config.yaml"
-output_folder: "{config_source}:output_folder"
+output_folder: "{config_source}:output_folder"  # Note: defined but not used - this workflow generates .env.io files at project root
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
 date: system-generated

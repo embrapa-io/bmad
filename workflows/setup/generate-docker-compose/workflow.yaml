@@ -1,11 +1,8 @@
 # Generate docker-compose.yaml Workflow Configuration
-name: generate-docker-compose
-description: "Gera arquivo docker-compose.yaml conforme com a plataforma Embrapa I/O baseado em template adaptável"
-author: "BMad Embrapa I/O Module"
 
 # Critical variables from config_source
 config_source: "{project-root}/bmad/embrapa-io/config.yaml"
-output_folder: "{config_source}:output_folder"
+output_folder: "{config_source}:output_folder"  # Note: defined but not used - this workflow generates docker-compose.yaml at project root
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
 date: system-generated
